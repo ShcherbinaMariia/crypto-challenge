@@ -6,11 +6,15 @@ import logic
 
 exchange = logic.Exchange(10000)
 
+#transactions_per_minute = EXPECTED_TRANSACTIONS_PER_MINUTE - real_number 
+
+transactions_per_minute = 4
+
 def exchange_run():
 	while(True):
-		for i in range (4):
+		for i in range (transactions_per_minute):
 			exchange.add_random_order()
-			sleep(0.25)
+			sleep(1/transactions_per_minute)
 		exchange.model_exchange_rate()
 		exchange.process_orders()
 

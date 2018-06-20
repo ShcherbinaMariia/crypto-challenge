@@ -31,7 +31,7 @@ class Exchange:
 		return random() * (MAX_AMOUNT - MIN_AMOUNT) + MIN_AMOUNT
 
 	def get_deviation_percent(self):
-		return min([random() for i in range(20)]) * (MAX_PERCENT - MIN_PERCENT) + MIN_PERCENT
+		return min([random() for i in range(7)]) * (MAX_PERCENT - MIN_PERCENT) + MIN_PERCENT
 
 	def gen_new_buy_order(self):
 		deviation_percent = self.get_deviation_percent()
@@ -58,14 +58,16 @@ class Exchange:
 	def find_profitable_sell_orders(self):
 		for sell_order in self.sell_orders:
 			if (sell_order.price < ((100 + MIN_PERCENT) / 100) * self.exchange_rate):
-				self.buy_orders.append(sell_order)
+				amount = sell_order.amount * random()
+				self.buy_orders.append(sell_order.price, amount)
+				self.buy_orders.append(sell_order, sell_order.amount - amount)
 
 	def make_deals(self):
 		self.buy_orders.sort(reverse = True)
 		self.sell_orders.sort()
 		while(len(self.sell_orders) != 0):
 			sell_order = self.sell_orders.pop(0)
-			while (len(self.buy_orders) != 0 and sell_order.amount!=0 and sell_order.price <= self.buy_orders[0].price):
+			while (len(self.buy_orders) != 0 and sell_order.amount != 0 and sell_order.price <= self.buy_orders[0].price):
 				buy_order = self.buy_orders.pop(0)
 				if (sell_order.amount > buy_order.amount):
 					self.deals.append(buy_order)
